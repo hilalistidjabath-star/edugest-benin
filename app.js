@@ -1,13 +1,45 @@
-// Maquette de démonstration uniquement : aucune donnée n'est envoyée à un serveur.
+const SUPABASE_URL = 'https://lmpqmeuswifvjdrrkbmi.supabase.co';
+const SUPABASE_KEY = 'TA_CLE_PUBLISHABLE';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 const signupForm = document.getElementById('signupForm');
-signupForm?.addEventListener('submit', (event) => {
+
+signupForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
-  document.getElementById('signupMessage').textContent =
-    'Compte de démonstration simulé. La création réelle sera activée après configuration de Supabase.';
-  signupForm.reset();
+
+  const message = document.getElementById('signupMessage');
+  const email = signupForm.querySelector('[type="email"]').value;
+  const password = signupForm.querySelector('[type="password"]').value;
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password
+  });
+
+  message.textContent = error
+    ? error.message
+    : 'Inscription enregistrée. Vérifiez votre adresse e-mail.';
 });
-document.getElementById('loginForm')?.addEventListener('submit', (event) => {
+
+const loginForm = document.getElementById('loginForm');
+
+loginForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
-  document.getElementById('loginMessage').textContent =
-    'Interface de connexion de démonstration. Authentification réelle non encore activée.';
+
+  const message = document.getElementById('loginMessage');
+  const email = loginForm.querySelector('[type="email"]').value;
+  const password = loginForm.querySelector('[type="password"]').value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  message.textContent = error
+    ? error.message
+    : 'Connexion réussie !';
 });
