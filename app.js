@@ -6,33 +6,49 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
+// INSCRIPTION DU DIRECTEUR
 const signupForm = document.getElementById('signupForm');
 
 signupForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const message = document.getElementById('signupMessage');
-  const email = signupForm.querySelector('[type="email"]').value;
-  const password = signupForm.querySelector('[type="password"]').value;
+
+  const fullName = signupForm.querySelector('[name="name"]').value;
+  const email = signupForm.querySelector('[name="email"]').value;
+  const phone = signupForm.querySelector('[name="phone"]').value;
+  const password = signupForm.querySelector('[name="password"]').value;
+
+  message.textContent = 'Inscription en cours...';
 
   const { error } = await supabaseClient.auth.signUp({
     email,
-    password
+    password,
+    options: {
+      data: {
+        full_name: fullName,
+        phone: phone
+      }
+    }
   });
 
   message.textContent = error
     ? error.message
-    : 'Inscription enregistrée. Vérifiez votre adresse e-mail.';
+    : 'Inscription réussie ! Vérifiez votre adresse e-mail pour confirmer votre compte.';
 });
 
+// CONNEXION
 const loginForm = document.getElementById('loginForm');
 
 loginForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const message = document.getElementById('loginMessage');
+
   const email = loginForm.querySelector('[type="email"]').value;
   const password = loginForm.querySelector('[type="password"]').value;
+
+  message.textContent = 'Connexion en cours...';
 
   const { error } = await supabaseClient.auth.signInWithPassword({
     email,
