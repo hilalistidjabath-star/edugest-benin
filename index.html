@@ -1,54 +1,108 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EDUGEST BENIN — Gestion scolaire</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10264a">
+  <title>EDUGEST BENIN | Gestion scolaire</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-  <header class="topbar">
-    <a class="brand" href="#"><span class="logo">E</span><span>EDUGEST <b>BENIN</b></span></a>
-    <nav><a href="#fonctionnalites">Fonctionnalités</a><a href="#inscription">Inscription</a><a href="#connexion">Connexion</a></nav>
-  </header>
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">LA GESTION SCOLAIRE SIMPLIFIÉE</p>
-        <h1>La réussite de votre établissement commence par une bonne organisation.</h1>
-        <p>EDUGEST BENIN accompagne les écoles primaires et secondaires dans leur gestion quotidienne.</p>
-        <div class="actions"><a class="btn primary" href="#inscription">Créer un compte directeur</a><a class="btn secondary" href="#fonctionnalites">Découvrir la plateforme</a></div>
-      </div>
-      <div class="hero-panel"><div class="panel-head">Tableau de bord scolaire</div><div class="stat-grid"><div class="stat"><small>Élèves</small><strong>—</strong></div><div class="stat"><small>Enseignants</small><strong>—</strong></div><div class="stat"><small>Classes</small><strong>—</strong></div><div class="stat"><small>Présences</small><strong>—</strong></div></div><p class="muted">Aperçu de démonstration</p></div>
-    </section>
-    <section id="fonctionnalites" class="section">
-      <p class="eyebrow">UNE PLATEFORME COMPLÈTE</p><h2>Les outils essentiels de votre école</h2>
-      <div class="cards">
-        <article><h3>Élèves & inscriptions</h3><p>Dossiers, matricules, classes et suivi des apprenants.</p></article>
-        <article><h3>Notes & bulletins</h3><p>Saisie des notes et génération des bulletins selon les règles de chaque école.</p></article>
-        <article><h3>Personnel scolaire</h3><p>Comptes et accès adaptés aux directeurs, enseignants et personnels.</p></article>
-        <article><h3>Absences & retards</h3><p>Suivi des présences et consultation des historiques.</p></article>
-        <article><h3>Finances</h3><p>Suivi des frais scolaires, paiements et états financiers.</p></article>
-        <article><h3>Statistiques</h3><p>Indicateurs pour aider la direction à piloter son établissement.</p></article>
-      </div>
-    </section>
-    <section id="inscription" class="section form-section">
-      <div><p class="eyebrow">REJOINDRE EDUGEST BENIN</p><h2>Créer votre compte directeur</h2><p>Le directeur crée d'abord son compte personnel, puis soumet les informations de son établissement pour validation.</p></div>
-      <form id="signupForm">
-        <label>Nom complet<input name="name" required placeholder="Votre nom et prénom"></label>
-        <label>Adresse e-mail<input name="email" type="email" required placeholder="nom@exemple.com"></label>
-        <label>Téléphone<input name="phone" required placeholder="Votre numéro"></label>
-        <label>Mot de passe de démonstration<input name="password" type="password" required minlength="6" placeholder="6 caractères minimum"></label>
-        <button class="btn primary" type="submit">Créer mon compte de démonstration</button>
-        <p id="signupMessage" class="message" aria-live="polite"></p>
-      </form>
-    </section>
-    <section id="connexion" class="section login-section">
-      <div><p class="eyebrow">ACCÈS À LA PLATEFORME</p><h2>Connexion</h2><p>Cette maquette présente le parcours prévu. L'authentification réelle sera configurée ultérieurement.</p></div>
-      <form id="loginForm"><label>Adresse e-mail<input type="email" required placeholder="Votre e-mail"></label><label>Mot de passe<input type="password" required placeholder="Votre mot de passe"></label><button class="btn secondary" type="submit">Tester l'interface</button><p id="loginMessage" class="message" aria-live="polite"></p></form>
-    </section>
-  </main>
-  <footer>© 2026 EDUGEST BENIN — La gestion scolaire, simplement.</footer>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<header class="header">
+  <div class="container">
+    <h1>EDUGEST <span>BENIN</span></h1>
+    <p>La gestion scolaire simplifiée</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h2>Bienvenue sur EDUGEST BENIN</h2>
+    <p>
+      Une plateforme moderne pour gérer les établissements
+      scolaires primaires et secondaires au Bénin.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Créer un compte directeur</h2>
+    <p>Inscrivez-vous pour créer et gérer votre établissement.</p>
+
+    <form id="signupForm">
+      <label>Nom complet</label>
+      <input name="name" type="text" required placeholder="Votre nom complet">
+
+      <label>Adresse e-mail</label>
+      <input name="email" type="email" required placeholder="Votre adresse e-mail">
+
+      <label>Téléphone</label>
+      <input name="phone" type="tel" required placeholder="Votre numéro de téléphone">
+
+      <label>Mot de passe</label>
+      <input name="password" type="password" minlength="6" required placeholder="6 caractères minimum">
+
+      <button type="submit">Créer mon compte</button>
+      <p id="signupMessage"></p>
+    </form>
+  </section>
+
+  <section class="section">
+    <h2>Connexion</h2>
+    <p>Accédez à votre espace personnel.</p>
+
+    <form id="loginForm">
+      <label>Adresse e-mail</label>
+      <input type="email" required placeholder="Votre adresse e-mail">
+
+      <label>Mot de passe</label>
+      <input type="password" required placeholder="Votre mot de passe">
+
+      <button type="submit">Se connecter</button>
+      <p id="loginMessage"></p>
+    </form>
+  </section>
+
+  <section class="section features">
+    <h2>Les fonctionnalités EDUGEST</h2>
+
+    <div class="feature">
+      <h3>Gestion des élèves</h3>
+      <p>Inscription, dossiers et suivi des élèves.</p>
+    </div>
+
+    <div class="feature">
+      <h3>Gestion pédagogique</h3>
+      <p>Classes, matières, notes et bulletins scolaires.</p>
+    </div>
+
+    <div class="feature">
+      <h3>Gestion du personnel</h3>
+      <p>Enseignants, secrétaires et responsables.</p>
+    </div>
+
+    <div class="feature">
+      <h3>Gestion financière</h3>
+      <p>Frais de scolarité et suivi des paiements.</p>
+    </div>
+
+    <div class="feature">
+      <h3>Espace parents</h3>
+      <p>Consultation des résultats et informations scolaires.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 EDUGEST BENIN — Tous droits réservés.</p>
+  <p>Une solution dédiée aux établissements scolaires du Bénin.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/app.js"></script>
-</body></html>
+
+</body>
+</html>
