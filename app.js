@@ -6,7 +6,78 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-// ESPACE DE L'APPLICATION
+const showMessage = (id, message) => {
+  const element = document.getElementById(id);
+  if (element) element.textContent = message;
+};
+
+// INSCRIPTION
+const signupForm = document.getElementById('signupForm');
+
+signupForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  showMessage('signupMessage', 'Inscription en cours...');
+
+  try {
+    const fullName = signupForm.querySelector('[name="name"]').value.trim();
+    const email = signupForm.querySelector('[name="email"]').value.trim();
+    const phone = signupForm.querySelector('[name="phone"]').value.trim();
+    const password = signupForm.querySelector('[name="password"]').value;
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          phone: phone
+        }
+      }
+    });
+
+    if (error) throw error;
+
+    showMessage(
+      'signupMessage',
+      data.session
+        ? 'Compte créé avec succès. Vous pouvez vous connecter.'
+        : 'Inscription enregistrée. Vérifiez votre boîte e-mail pour confirmer votre compte.'
+    );
+
+  } catch (error) {
+    showMessage('signupMessage', 'Erreur : ' + error.message);
+  }
+});
+
+// CONNEXION
+const loginForm = document.getElementById('loginForm');
+
+loginForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  showMessage('loginMessage', 'Connexion en cours...');
+
+  try {
+    const email = loginForm.querySelector('[type="email"]').value.trim();
+    const password = loginForm.querySelector('[type="password"]').value;
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    showMessage('loginMessage', 'Connexion réussie !');
+    showDashboard(data.user);
+
+  } catch (error) {
+    showMessage('loginMessage', 'Erreur : ' + error.message);
+  }
+});
+
+// TABLEAU DE BORD DIRECTEUR
 function showDashboard(user) {
   let dashboard = document.getElementById('directorDashboard');
 
@@ -20,12 +91,11 @@ function showDashboard(user) {
   dashboard.innerHTML = `
     <h2>Mon espace directeur</h2>
     <p>Bienvenue ${user.user_metadata?.full_name || user.email}.</p>
-
     <h3>Créer mon établissement</h3>
 
     <form id="schoolForm">
       <label>Nom de l'établissement</label>
-      <input name="schoolName" required placeholder="Nom de l'école">
+      <input name="schoolName" required>
 
       <label>Type d'établissement</label>
       <select name="schoolType" required>
@@ -36,7 +106,7 @@ function showDashboard(user) {
       </select>
 
       <label>Adresse</label>
-      <input name="address" placeholder="Adresse de l'établissement">
+      <input name="address">
 
       <label>Ville</label>
       <input name="city" value="Bénin">
@@ -52,29 +122,31 @@ function showDashboard(user) {
     event.preventDefault();
 
     const form = event.currentTarget;
-    const message = document.getElementById('schoolMessage');
+    showMessage('schoolMessage', 'Enregistrement en cours...');
 
-    message.textContent = 'Enregistrement en cours...';
+    try {
+      const { error } = await supabaseClient.rpc(
+        'create_school_and_director',
+        {
+          p_name: form.elements.schoolName.value.trim(),
+          p_school_type: form.elements.schoolType.value,
+          p_address: form.elements.address.value.trim() || null,
+          p_city: form.elements.city.value.trim() || 'Bénin'
+        }
+      );
 
-    const { data, error } = await supabaseClient.rpc(
-      'create_school_and_director',
-      {
-        p_name: form.schoolName.value.trim(),
-        p_school_type: form.schoolType.value,
-        p_address: form.address.value.trim() || null,
-        p_city: form.city.value.trim() || 'Bénin'
-      }
-    );
+      if (error) throw error;
 
-    if (error) {
-      message.textContent = 'Erreur : ' + error.message;
-      return;
+      showMessage(
+        'schoolMessage',
+        'Établissement enregistré. Il reste à le faire valider.'
+      );
+
+      form.reset();
+
+    } catch (error) {
+      showMessage('schoolMessage', 'Erreur : ' + error.message);
     }
-
-    message.textContent =
-      'Établissement enregistré ! Votre demande sera soumise à validation.';
-
-    form.reset();
   });
 
   document.getElementById('logoutButton').addEventListener('click', async () => {
@@ -83,76 +155,18 @@ function showDashboard(user) {
   });
 }
 
-// INSCRIPTION DU DIRECTEUR
-const signupForm = document.getElementById('signupForm');
-
-signupForm?.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const message = document.getElementById('signupMessage');
-
-  const fullName = signupForm.querySelector('[name="name"]').value.trim();
-  const email = signupForm.querySelector('[name="email"]').value.trim();
-  const phone = signupForm.querySelector('[name="phone"]').value.trim();
-  const password = signupForm.querySelector('[name="password"]').value;
-
-  message.textContent = 'Inscription en cours...';
-
-  const { error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: fullName,
-        phone: phone
-      }
-    }
-  });
-
-  message.textContent = error
-    ? 'Erreur : ' + error.message
-    : 'Inscription enregistrée. Vérifiez votre e-mail pour confirmer votre compte.';
-});
-
-// CONNEXION
-const loginForm = document.getElementById('loginForm');
-
-loginForm?.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const message = document.getElementById('loginMessage');
-  const email = loginForm.querySelector('[type="email"]').value.trim();
-  const password = loginForm.querySelector('[type="password"]').value;
-
-  message.textContent = 'Connexion en cours...';
-
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    message.textContent = 'Erreur : ' + error.message;
-    return;
-  }
-
-  message.textContent = 'Connexion réussie !';
-  showDashboard(data.user);
-});
-
 // RESTAURATION DE SESSION
 async function checkSession() {
-  const { data } = await supabaseClient.auth.getSession();
+  try {
+    const { data, error } = await supabaseClient.auth.getSession();
 
-  if (data.session) {
-    showDashboard(data.session.user);
+    if (error) throw error;
+
+    if (data.session) showDashboard(data.session.user);
+
+  } catch (error) {
+    console.error('Erreur de session :', error.message);
   }
 }
 
 checkSession();
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN' && session) {
-    showDashboard(session.user);
-  }
-});
